@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0A100E">
+<meta name="description" content="A drinking-and-arguing game in 14 rounds. Love, marriage, autonomy, and the problem of sharing your life.">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>I don't need my soulmate — 14 rounds</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:SOFT,WONK,opsz,wght@0..100,0..1,9..144,300..700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --night:#0A100E;
+  --glass:#131B17;
+  --glass-2:#1C2721;
+  --edge:rgba(240,237,226,.13);
+  --salt:#F0EDE2;
+  --sage:#94A489;
+  --olive:#B0C55C;
+  --oil:#E0A53C;
+  --pimento:#D2483A;
+  --serif:"Fraunces","Iowan Old Style",Georgia,"Times New Roman",serif;
+  --sans:ui-sans-serif,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",sans-serif;
+  --wonk:'SOFT' 40,'WONK' 1;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;
+  background:
+    radial-gradient(120% 60% at 50% -10%, #142019 0%, transparent 60%),
+    #060908;
+  min-height:100dvh;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--sans);
+}
+#wrap{
+  width:100%;max-width:560px;
+  height:100dvh;max-height:1000px;
+  background:var(--night);
+  color:var(--salt);
+  display:flex;flex-direction:column;
+  position:relative;overflow:hidden;
+  box-shadow:0 0 0 1px var(--edge);
+}
+@media (min-width:600px){#wrap{border-radius:18px;height:min(100dvh,920px)}}
+
+/* ---- the pick: 14 olives on a cocktail stick ---- */
+#pick{
+  display:flex;align-items:center;
+  padding:calc(8px + env(safe-area-inset-top)) 10px 4px;
+  position:relative;flex:0 0 auto;
+}
+#stick{
+  position:absolute;left:18px;right:18px;top:calc(30px + env(safe-area-inset-top));
+  height:1.5px;background:rgba(240,237,226,.16);
+}
+#stick i{display:block;height:100%;background:var(--oil);width:0;transition:width .4s ease}
+#pick button{
+  flex:1;height:46px;background:none;border:none;padding:0;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;
+  position:relative;z-index:1;
+}
+#pick .o{
+  width:13px;height:13px;border-radius:50%;
+  border:1.5px solid rgba(240,237,226,.28);
+  background:var(--night);
+  display:block;transition:transform .2s ease;
+}
+#pick .o.done{background:var(--olive);border-color:var(--olive)}
+#pick .o.now{
+  background:var(--oil);border-color:var(--oil);
+  transform:scale(1.45);
+  box-shadow:0 0 0 4px rgba(224,165,60,.16);
+}
+#pick .o.now:after{
+  content:"";position:absolute;left:50%;top:50%;
+  width:5px;height:5px;margin:-2.5px 0 0 -2.5px;
+  border-radius:50%;background:var(--pimento);
+}
+
+#screen{flex:1;overflow-y:auto;overscroll-behavior:contain;padding:14px 20px 32px;-webkit-overflow-scrolling:touch}
+
+.kicker{font-family:var(--sans);font-size:13px;color:var(--sage);margin:0 0 10px;letter-spacing:.01em}
+h1{
+  font-family:var(--serif);font-variation-settings:var(--wonk),'opsz' 120;
+  font-weight:600;font-size:37px;line-height:1.08;letter-spacing:-.018em;
+  margin:0 0 16px;
+}
+h2{
+  font-family:var(--serif);font-variation-settings:var(--wonk),'opsz' 96;
+  font-weight:600;font-size:28px;line-height:1.14;letter-spacing:-.014em;margin:0 0 18px;
+}
+.lede{font-family:var(--serif);font-size:18.5px;line-height:1.6;margin:0 0 20px;color:#DCDCCF}
+
+.story{border-left:1.5px solid var(--olive);padding:2px 0 2px 16px;margin:0 0 22px}
+.story p{font-family:var(--serif);font-size:17.5px;line-height:1.72;margin:0 0 14px;color:#E2E0D2}
+.story p:last-child{margin-bottom:0}
+.story p.punch{
+  font-size:21px;line-height:1.4;color:var(--salt);font-weight:600;
+  font-variation-settings:var(--wonk),'opsz' 72;
+}
+
+.aside{background:var(--glass);border-radius:12px;padding:16px;margin:0 0 22px}
+.aside .tag{font-family:var(--sans);font-size:12.5px;color:var(--oil);margin:0 0 9px}
+.aside p{font-family:var(--serif);font-size:16.5px;line-height:1.66;margin:0 0 12px;color:#D9D8CB}
+.aside p:last-child{margin-bottom:0}
+.note{font-size:13.5px;line-height:1.62;color:var(--sage);margin:0 0 18px}
+
+.qhead{font-size:13px;color:var(--sage);margin:26px 0 10px}
+ul.qs{list-style:none;margin:0 0 6px;padding:0}
+ul.qs li{
+  font-family:var(--serif);font-size:17.5px;line-height:1.42;
+  padding:16px 14px 16px 42px;margin:0 0 8px;
+  background:var(--glass);border-radius:10px;
+  position:relative;cursor:pointer;
+  transition:opacity .18s,background .18s;
+  min-height:52px;
+}
+ul.qs li:before{
+  content:"";position:absolute;left:15px;top:20px;
+  width:13px;height:13px;border-radius:50%;
+  border:1.5px solid rgba(240,237,226,.3);
+}
+ul.qs li:after{
+  content:"";position:absolute;left:19px;top:24px;
+  width:5px;height:5px;border-radius:50%;background:transparent;
+}
+ul.qs li.on{opacity:.4}
+ul.qs li.on:before{background:var(--olive);border-color:var(--olive)}
+ul.qs li.on:after{background:var(--pimento)}
+ul.qs li.heavy{background:var(--glass-2);box-shadow:inset 0 0 0 1px rgba(210,72,58,.4)}
+ul.qs li.heavy:before{border-color:rgba(210,72,58,.65)}
+ul.qs li.heavy.on:before{background:var(--pimento);border-color:var(--pimento)}
+ul.qs li.heavy.on:after{background:var(--night)}
+
+.traits{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 4px}
+.traits button{
+  font-family:var(--sans);font-size:15px;
+  background:var(--glass);color:var(--salt);
+  border:1px solid transparent;border-radius:999px;
+  padding:12px 16px;min-height:44px;cursor:pointer;
+}
+.traits button.picked{background:var(--olive);color:#101509;font-weight:600}
+.traits button:disabled{opacity:.3}
+.counter{font-size:14px;color:var(--sage);margin:14px 0 4px}
+.counter b{color:var(--olive);font-weight:600}
+
+.row{background:var(--glass);border-radius:11px;padding:13px 14px 8px;margin:0 0 9px}
+.row .rl{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.row .rl span:first-child{font-family:var(--serif);font-size:16.5px;line-height:1.35}
+.row .val{font-family:var(--sans);font-size:15px;font-weight:700;min-width:22px;text-align:right}
+input[type=range]{width:100%;margin:6px 0 2px;accent-color:var(--olive);height:30px}
+
+#glass{display:flex;justify-content:center;margin:2px 0 2px}
+#glass svg{width:180px;height:auto}
+.dirt{text-align:center}
+.dirt .lvl{
+  font-family:var(--serif);font-variation-settings:var(--wonk),'opsz' 120;
+  font-size:44px;font-weight:600;color:var(--oil);margin:0;line-height:1.1;
+}
+.dirt .verdict{font-family:var(--serif);font-size:18.5px;line-height:1.4;min-height:52px;margin:6px 0 0;color:#DCDCCF}
+
+.startbtn{
+  font-family:var(--sans);font-size:16px;font-weight:600;
+  background:var(--oil);color:#160E02;border:none;border-radius:999px;
+  padding:16px 28px;min-height:52px;cursor:pointer;margin:8px 0 0;
+}
+.linkbtn{font-size:14px;background:none;border:none;color:var(--sage);padding:16px 0 0;cursor:pointer;text-decoration:underline}
+
+#nav{
+  flex:0 0 auto;display:flex;align-items:stretch;
+  background:rgba(10,16,14,.96);
+  border-top:1px solid var(--edge);
+  padding-bottom:env(safe-area-inset-bottom);
+  backdrop-filter:blur(10px);
+}
+#nav button{font-family:var(--sans);font-size:16px;background:none;border:none;color:var(--salt);padding:18px 20px;cursor:pointer;min-height:56px}
+#nav button:disabled{opacity:.25}
+#where{flex:1;color:var(--sage);font-size:14px}
+#next{color:var(--oil);font-weight:600}
+
+#sheet{position:absolute;inset:0;background:rgba(6,10,9,.975);padding:18px 18px calc(18px + env(safe-area-inset-bottom));overflow-y:auto;display:none;z-index:5}
+#sheet.open{display:block}
+#sheet .jump{
+  display:block;width:100%;text-align:left;
+  background:none;border:none;border-bottom:1px solid var(--edge);
+  color:var(--salt);font-family:var(--serif);font-size:17px;
+  padding:15px 2px;cursor:pointer;
+}
+#sheet .jump span{font-family:var(--sans);font-size:12.5px;color:var(--sage);display:block;margin-top:3px}
+#sheet .jump.here{color:var(--oil)}
+#sheet .sheetfoot{display:flex;justify-content:space-between;align-items:center;gap:12px}
+#sheet .danger{color:var(--pimento);text-decoration-color:rgba(210,72,58,.5)}
+
+:focus-visible{outline:2px solid var(--oil);outline-offset:2px;border-radius:6px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<div id="wrap">
+  <div id="pick"><div id="stick"><i></i></div></div>
+  <div id="screen"></div>
+  <div id="nav">
+    <button id="prev">Back</button>
+    <button id="where"></button>
+    <button id="next">Next</button>
+  </div>
+  <div id="sheet"></div>
+</div>
+
+<script>
+const TRAITS=["Kindness","Reliability","Money","Ambition","Intelligence","Emotional intelligence","Sexual compatibility","Looks","Humor","Domestic competence","Independence","Stability","Family compatibility","Lifestyle compatibility","Social compatibility","Loyalty","Conflict-management skills","Generosity","Confidence","Ability to give you space"];
+const TRIGGERS=["Rearranges your kitchen","Invites someone to your home without asking","Gives you unsolicited advice","Changes weekend plans without consulting you","Wants to spend every evening together","Doesn't want to join your friends","Has a habit you find extremely annoying","Criticizes the way you do something","Wants to know your plans","Helps you — but never in the way you would have done it"];
+
+const S=[
+{kind:"cover"},
+{n:1,title:"The realization",
+ story:[`Okay, I had a realization today that I genuinely don't know how I feel about. I think I might actually need a boyfriend or a husband.`,
+ `Not because I suddenly believe in great love, or because I've met someone. Literally for practical reasons. We'd split the rent. We'd split the chores. We'd share the dog. Someone to deal with all the annoying adult-life shit you currently deal with alone.`,
+ `And sometimes I just want someone there. If I'm exhausted, I don't want to be the only person responsible for everything.`,
+ `Maybe I finally understand why people reach a certain age and go: you know what, I think I should get married. Maybe they're not having a spiritual realization about love. Maybe they're just tired.`,
+ {p:`I don't need my soulmate. I need a husband who functions.`,punch:true}],
+ aside:{tag:"Side story — “I have a boyfriend”",p:[`If a man is hitting on you and you say “I'm not interested,” sometimes that doesn't end the conversation. If you say “I have a boyfriend,” suddenly it's understood.`,`Nothing about my availability changed. I'm still the same person saying no.`],
+ q:[`Why does “she belongs to someone” get more respect than “she said no”?`]},
+ qs:[`Is choosing a partner because they make your life better romantic, or fundamentally selfish?`,`Should a relationship have a positive ROI?`,`Is it wrong to choose someone partly because they make your life easier?`,`What does a partner give you that close friends cannot?`,`Would you rather have someone who desperately needs you, or someone who doesn't need you at all but consciously chooses you?`,`If someone is objectively good for you but you aren't in love with them, is marrying them smart or cruel?`,`Is love actually necessary for a successful marriage?`,`If marriage makes two lives objectively better, does it matter why they chose each other?`]},
+{n:2,title:"Marriage as a business model",
+ story:[`The more I think about it, the more marriage looks like a very sophisticated business arrangement. One earns more. One does more household work. One is better socially. One is better with money. One is more emotionally stable.`,
+ `You merge two lives. You share costs, assets, responsibilities, networks, obligations, sometimes children, sometimes businesses. You create efficiencies.`,
+ {p:`And then you put flowers on the table and call it romance.`,punch:true},
+ `I'm not saying that's bad. Maybe it's beautiful that two people can decide: life is difficult, let's make it easier for each other.`],
+ aside:{tag:"Side story — the corporate merger",p:[`Two companies look at each other and go: you have assets I don't have, I have capabilities you don't have, together we reduce costs and increase efficiency. And then they have sex and call it a relationship.`],
+ q:[`If a relationship is a mutually beneficial exchange, what makes it different from a transaction?`]},
+ qs:[`Is marriage fundamentally romantic, economic, or social?`,`If marriage is partly economic, why do we pretend it isn't?`,`Is marrying someone financially stable different from marrying someone beautiful?`,`Why is choosing someone for money shallow, but choosing someone for emotional security isn't?`,`Would you marry someone you don't passionately love if you knew you'd have an exceptionally good life?`,`If both people benefit equally, is it still “using” each other?`,`Is there anything wrong with consciously optimizing your choice of partner?`,`If marriage is a contract, why shouldn't we treat partner selection rationally?`]},
+{n:3,title:"Love vs. compatibility",
+ story:[`If I'm being completely rational, compatibility is probably more important than chemistry.`,
+ `Someone can be attractive, exciting, make you feel insane things — and still be terrible for your life. Someone else can be stable, funny, kind, mature, reliable, compatible with everything you want, and not make your heart explode.`,
+ `So what do you choose? The person who gives you butterflies, or the person who gives you peace?`,
+ {p:`Because maybe butterflies are just anxiety with good PR.`,punch:true}],
+ aside:{tag:"Side story — the red flag question",p:[`We talk about red flags like the answer is obvious: leave. But everyone has flaws. If I reject everyone who annoys me I end up alone. If I accept everything because nobody is perfect, I end up miserable.`],
+ q:[`What flaw would you tolerate in someone you loved that you'd reject instantly in someone you only liked?`]},
+ qs:[`A 10/10 life partner with 6/10 chemistry, or a 10/10 romantic connection with 3/10 compatibility?`,`Is chemistry overrated?`,`Can attraction grow if everything else is right?`,`Can love survive fundamentally different lifestyles?`,`Deeply loved by someone you love less, or deeply loving someone who loves you less?`,`If someone is perfect for you but you don't desire them enough, are you wasting their time?`,`Is “settling” always bad?`,`Could choosing rationally produce a better marriage than choosing romantically?`]},
+{n:4,title:"Designing the husband",kind:"traits",
+ note:`Everyone picks five. No abstaining, no “it depends.” Then read them out around the table.`,
+ qs:[`Which one hurt to cut?`,`Which trait would you sacrifice if the person were extremely attractive?`,`Which flaw would you tolerate because the person is otherwise exceptional?`,`What sounds important in theory but isn't, for you?`,`What makes someone completely undateable even if everything else is perfect?`,`A boring person who gives you peace, or an exciting person who gives you problems?`]},
+{n:5,title:"What does your partner owe you?",
+ story:[`Once someone becomes your partner, what are you actually entitled to expect? Emotional support. Sex. Loyalty. Money. Their time. Their availability. Forgiveness. Priority. Care.`,
+ {p:`And where does entitlement become control?`,punch:true}],
+ qs:[`What does a partner owe you that a friend doesn't?`,`Are you entitled to your partner's time?`,`Are you entitled to sex in a relationship?`,`Are you entitled to know where your partner is?`,`Are you entitled to be prioritized over their friends?`,`Is financial support part of partnership?`,`If your partner stops providing something essential, are they failing you — or are you incompatible?`,`When does asking for something become demanding it?`,`Can someone be a good partner while refusing to give you something you consider essential?`]},
+{n:6,title:"Enter Zeynep",
+ story:[`This brings me to something that happened recently. I had a friend staying with me. Nothing terrible happened. No huge fight. She wasn't a bad guest.`,
+ `But it made me realize something uncomfortable about myself.`,
+ {p:`I am extremely protective of my space.`,punch:true}],
+ note:`Short round. Let it sit, then go to the case study.`,qs:[]},
+{n:7,title:"The Zeynep case study",
+ story:[`I realized how much I dislike other people entering my routines. People deciding what we're doing with my time. People doing things in my apartment without asking. Feeling like someone is managing my life.`,
+ `She was smoking a lot, so we ended up home more than I wanted. I wanted to see Yağız; she didn't. I barely convinced her to come to the barbecue with Gökçe. She didn't want to go to Oğulcan's birthday. So we stayed in, smoking, quiet, playing backgammon.`,
+ `None of that is inherently bad. But I was hosting someone and somehow not doing the things I wanted to do. Instead of feeling rested, I felt stressed.`,
+ `She also gave me opinions on things I hadn't asked about. Well-intentioned. But internally: I know you're trying to help, but you don't know me well enough to manage me yet.`,
+ `I want a partner. I want to share my life, my responsibilities, my home. But I absolutely do not want someone constantly entering my life and rearranging it.`,
+ {p:`So how the fuck am I supposed to find a partner?`,punch:true}],
+ qs:[`Whose side are you on here — hers or the guest's?`,`Have you ever felt this about someone you love?`]},
+{n:8,title:"Care or control?",
+ qs:[`When does caring become controlling?`,`Is unsolicited advice a form of disrespect?`,`If someone loves you, do they have a responsibility to tell you when you're fucking up?`,`If you say “I don't want your opinion,” should they respect that even if you're making a terrible mistake?`,`Would you rather be protected or respected?`,`Is helping someone without being asked actually helping?`,`How much influence should your partner have over your decisions?`,`Is “I just want what's best for you” ever an excuse for control?`],
+ heavy:[`If you love someone, do you have the right to interfere in their life?`]},
+{n:9,title:"The autonomy test",kind:"sliders",
+ note:`Rate each one. 0 = fine. 10 = I would lose my fucking mind. Compare numbers around the table before you discuss.`,
+ qs:[`Which one makes you feel most controlled?`,`Which could you tolerate?`,`Which would genuinely make you question the relationship?`,`What would you never tolerate — but secretly might, if you really loved them?`,`Is there any behavior love should never make you tolerate?`]},
+{n:10,title:"The contradiction",
+ story:[`I want someone because I'm tired of doing everything alone. But I don't want anyone interfering with my life.`,
+ `I want someone to share my home with. But I don't want someone taking over my home. I want intimacy. But I want independence. I want someone deeply involved in my life. But I don't want to lose the life I already have.`,
+ {p:`Maybe intimacy requires giving someone a certain amount of power over you.`,punch:true}],
+ heavy:[`Can you have a truly intimate relationship without giving someone the power to hurt you?`,`If nobody has the power to hurt you, can they actually have the power to love you?`]},
+{n:11,title:"Design your ideal relationship",
+ note:`Forget social expectations. No pressure to marry, have children, live together, share money, be monogamous, or see each other's families. Answer as if nobody would judge you.`,
+ qs:[`Where do you live?`,`How often do you see each other?`,`Separate apartments?`,`Do you share money?`,`Who does the household work?`,`How much alone time do you need?`,`How much of your social life is shared?`,`How much do you know about each other's daily lives?`,`How much emotional responsibility do you have for each other?`,`How much sex do you expect?`,`What happens when one person needs more space?`],
+ heavy:[`With no social expectations at all, would you choose the relationship model you're currently trying to achieve?`]},
+{n:12,title:"Love vs. life",
+ note:`Go around the table one by one. Everyone answers before anyone argues.`,
+ qs:[`Would you marry someone perfect for your life but not the love of your life?`,`Would you stay with someone you deeply love if you knew they were wrong for your life?`,`Can you love someone and still decide they're bad for you?`,`Can someone be the love of your life and the wrong person to marry?`,`Is compatibility more important than love?`,`Is love more important than compatibility?`,`When does compromise become two incompatible people negotiating their unhappiness?`]},
+{n:13,title:"The final fear",
+ story:[`Maybe people stay in bad relationships not because they're still in love. Maybe because leaving means admitting they wasted years. Or because being single feels like failure. Or because starting again feels exhausting.`,
+ {p:`Or because it isn't great, but it's easier than doing life alone.`,punch:true}],
+ qs:[`What scares you more: alone forever, or the wrong person for 20 years?`,`How many people stay because leaving means admitting they wasted years?`,`Is being single a failure, or were we trained to see it that way?`,`An imperfect relationship or no relationship at all?`]},
+{n:14,title:"The verdict",kind:"final",
+ note:`Everyone answers all five. Out loud. No hedging.`,
+ qs:[`What do you actually want from a partner? Not what sounds romantic — what you want.`,`What are you unwilling to give up for a relationship?`,`What are you willing to compromise on?`,`What's the one thing you need a partner to make better?`,`What's the one thing you could never let them take from you?`]},
+{kind:"end"}
+];
+
+let st={i:0,checked:{},traits:[],rate:{},pct:20};
+const $=s=>document.querySelector(s);
+
+/* ---- storage ----
+   Saves to localStorage on this device. Private-mode Safari and sandboxed
+   frames can block it, so it falls back to the host store, then to memory. */
+const KEY="martini-night-v1";
+const mem={};
+const hasLS=(()=>{try{localStorage.setItem("__t","1");localStorage.removeItem("__t");return true;}catch(e){return false;}})();
+const store={
+  async get(k){
+    if(hasLS){try{const v=localStorage.getItem(k);if(v!==null)return v;}catch(e){}}
+    if(window.storage){try{const r=await window.storage.get(k);if(r&&r.value)return r.value;}catch(e){}}
+    return mem[k]||null;
+  },
+  async set(k,v){
+    mem[k]=v;
+    if(hasLS){try{localStorage.setItem(k,v);return;}catch(e){}}
+    if(window.storage){try{await window.storage.set(k,v);}catch(e){}}
+  }
+};
+let timer=null;
+function flush(){clearTimeout(timer);timer=null;store.set(KEY,JSON.stringify(st));}
+function save(){clearTimeout(timer);timer=setTimeout(flush,500);}
+addEventListener("pagehide",()=>{if(timer)flush();});
+addEventListener("visibilitychange",()=>{if(document.visibilityState==="hidden"&&timer)flush();});
+async function load(){
+  try{const v=await store.get(KEY);if(v)st={...st,...JSON.parse(v)};}catch(e){}
+  render();
+}
+
+/* ---- the glass ---- */
+function mix(a,b,t){return "#"+a.map((v,i)=>Math.round(v+(b[i]-v)*t).toString(16).padStart(2,"0")).join("");}
+function dirtLabel(p){return p<=15?"Bone dry":p<=35?"Dry":p<=55?"Dirty":p<=75?"Extra dirty":"Filthy";}
+function verdictFor(p){
+  if(p<=15)return "Still entirely yours.";
+  if(p<=35)return "A negotiation you'd probably win.";
+  if(p<=55)return "A merger. Flowers on the table optional.";
+  if(p<=75)return "You'd start describing your old life in the past tense.";
+  return "That isn't love. That's a takeover.";
+}
+function glassSVG(p){
+  const t=p/100;
+  const liquid=mix([236,226,183],[122,138,60],t);
+  const surface=mix([249,244,220],[152,166,90],t);
+  const n=p<=33?1:p<=66?2:3;
+  const x0=150,y0=8,x1=98,y1=100;
+  let olives="";
+  const spots=n===1?[.62]:n===2?[.52,.72]:[.44,.62,.80];
+  spots.forEach(s=>{
+    const cx=x0+(x1-x0)*s, cy=y0+(y1-y0)*s;
+    olives+=`<g transform="rotate(120 ${cx} ${cy})">
+      <ellipse cx="${cx}" cy="${cy}" rx="12" ry="9.5" fill="#8CA33F" stroke="#5E7025" stroke-width="1"/>
+      <circle cx="${cx-3}" cy="${cy}" r="3.4" fill="#D2483A"/></g>`;
+  });
+  return `<svg viewBox="0 0 220 210" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="A martini, ${dirtLabel(p).toLowerCase()}">
+    <polygon points="46,44 174,44 110,116" fill="${liquid}"/>
+    <ellipse cx="110" cy="44" rx="64" ry="6.5" fill="${surface}"/>
+    <polygon points="38,36 182,36 110,124" fill="none" stroke="#F0EDE2" stroke-width="2.4" stroke-linejoin="round"/>
+    <rect x="106.5" y="122" width="7" height="52" fill="#F0EDE2"/>
+    <ellipse cx="110" cy="180" rx="38" ry="7" fill="none" stroke="#F0EDE2" stroke-width="2.4"/>
+    <line x1="${x0}" y1="${y0}" x2="${x1}" y2="${y1}" stroke="#E0A53C" stroke-width="3" stroke-linecap="round"/>
+    ${olives}
+  </svg>`;
+}
+
+function qli(q,key,heavy){
+  const done=(st.checked[st.i]||[]).includes(String(key));
+  return `<li class="${done?"on":""} ${heavy?"heavy":""}" onclick="tick('${key}')">${q}</li>`;
+}
+
+function render(){
+  const s=S[st.i];
+  const el=$("#screen");
+  let h="";
+
+  if(s.kind==="cover"){
+    h+=`<p class="kicker">A drinking-and-arguing game, in 14 rounds</p>
+    <h1>I don't need my soulmate.<br>I need a husband who functions.</h1>
+    <p class="lede">Love, marriage, autonomy, and the problem of sharing your life. It starts personal and gets steadily less comfortable.</p>
+    <div class="aside"><p class="tag">House rules</p>
+    <p>One person reads the story out loud. Then the questions, one at a time — tap a question to grey it out once the table is done with it.</p>
+    <p>Everyone answers before anyone gets to argue. You may skip one question per round, and you have to say that you're skipping it.</p>
+    <p>Two rounds are hands-on: round four you build a husband, round nine you measure your own rage. Everything you tap stays on this phone — close the tab and it reopens where you left it.</p></div>
+    <button class="startbtn" onclick="go(1)">Start round one</button>
+    <p class="note" style="margin-top:22px">Swipe left and right to move between rounds. Tap the olives up top to jump.</p>`;
+  }
+
+  else if(s.kind==="end"){
+    const top=Object.entries(st.rate).sort((a,b)=>b[1]-a[1])[0];
+    h+=`<p class="kicker">Last question</p>
+    <h1>If the perfect person existed, but being with them cost you some of your independence — how much would you pay?</h1>
+    <div id="glass">${glassSVG(st.pct)}</div>
+    <div class="dirt">
+      <p class="lvl"><span id="pctnum">${st.pct}</span>% <span style="font-size:20px;color:var(--sage)">·</span> <span id="dirtlbl" style="font-size:22px;color:var(--olive)">${dirtLabel(st.pct)}</span></p>
+      <p class="verdict" id="verdict">${verdictFor(st.pct)}</p>
+    </div>
+    <input type="range" min="0" max="100" step="5" value="${st.pct}" oninput="setPct(this.value)" aria-label="How much independence would you pay">
+    <p class="qhead">Then, finally</p>
+    <ul class="qs">${qli(`Would you rather be alone and completely free, or deeply loved and slightly less free?`,0,true)}</ul>`;
+    if(st.traits.length===5||top){
+      h+=`<div class="aside"><p class="tag">Your tab for the night</p>`;
+      if(st.traits.length===5)h+=`<p>You'd build him out of: ${st.traits.join(", ").toLowerCase()}.</p>`;
+      if(top)h+=`<p>The thing most likely to make you lose your mind: ${top[0].toLowerCase()} — you gave it ${top[1]} out of 10.</p>`;
+      h+=`</div>`;
+    }
+    h+=`<button class="linkbtn" onclick="go(0)">Back to the start</button>`;
+  }
+
+  else{
+    h+=`<p class="kicker">Round ${s.n}</p><h2>${s.title}</h2>`;
+    if(s.story){h+=`<div class="story">`;s.story.forEach(p=>{
+      if(typeof p==="string")h+=`<p>${p}</p>`;else h+=`<p class="${p.punch?"punch":""}">${p.p}</p>`;});h+=`</div>`;}
+    if(s.note)h+=`<p class="note">${s.note}</p>`;
+
+    if(s.kind==="traits"){
+      h+=`<div class="traits">`+TRAITS.map((t,j)=>{
+        const on=st.traits.includes(t);
+        return `<button class="${on?"picked":""}" ${(!on&&st.traits.length>=5)?"disabled":""} onclick="pick(${j})">${t}</button>`;
+      }).join("")+`</div>`;
+      h+=`<p class="counter"><b>${st.traits.length}</b> of 5 chosen${st.traits.length===5?" — now defend them.":""}</p>`;
+    }
+
+    if(s.kind==="sliders"){
+      h+=`<div class="rows">`+TRIGGERS.map((t,j)=>{
+        const v=st.rate[t]??0;
+        const col=v>=8?"var(--pimento)":v>=5?"var(--oil)":"var(--olive)";
+        return `<div class="row"><div class="rl"><span>${t}</span><span class="val" style="color:${col}">${v}</span></div>
+        <input type="range" min="0" max="10" value="${v}" oninput="setRate(${j},this.value)" aria-label="${t}"></div>`;
+      }).join("")+`</div>`;
+    }
+
+    if(s.aside){
+      h+=`<div class="aside"><p class="tag">${s.aside.tag}</p>`+s.aside.p.map(p=>`<p>${p}</p>`).join("")+`</div>`;
+      h+=`<ul class="qs">${s.aside.q.map((q,j)=>qli(q,"a"+j,true)).join("")}</ul>`;
+    }
+    if(s.qs&&s.qs.length){
+      h+=`<p class="qhead">${s.kind==="traits"?"Then, around the table":s.kind==="final"?"Everyone answers":"Discuss"}</p>`;
+      h+=`<ul class="qs">${s.qs.map((q,j)=>qli(q,j,false)).join("")}</ul>`;
+    }
+    if(s.heavy){
+      h+=`<p class="qhead">The uncomfortable one</p>`;
+      h+=`<ul class="qs">${s.heavy.map((q,j)=>qli(q,"h"+j,true)).join("")}</ul>`;
+    }
+  }
+
+  el.innerHTML=h;
+  el.scrollTop=0;
+  drawPick();
+  $("#prev").disabled=st.i===0;
+  $("#next").disabled=st.i===S.length-1;
+  $("#next").textContent=st.i===S.length-2?"Finish":"Next";
+  $("#where").textContent=st.i===0?"Tap to jump":st.i===S.length-1?"The end":`Round ${S[st.i].n} of 14`;
+}
+
+function drawPick(){
+  const p=$("#pick");
+  if(!p.dataset.built){
+    let h=`<div id="stick"><i></i></div>`;
+    for(let r=1;r<=14;r++)h+=`<button onclick="go(${r})" aria-label="Round ${r}"><span class="o"></span></button>`;
+    p.innerHTML=h;p.dataset.built="1";
+  }
+  const os=p.querySelectorAll(".o");
+  os.forEach((o,j)=>{
+    const r=j+1;
+    o.className="o"+(r<st.i?" done":"")+(r===st.i?" now":"")+(st.i===S.length-1?" done":"");
+  });
+  $("#stick i").style.width=Math.round(Math.max(0,st.i-1)/13*100)+"%";
+}
+
+function tick(key){
+  key=String(key);
+  const arr=st.checked[st.i]||[];
+  st.checked[st.i]=arr.includes(key)?arr.filter(x=>x!==key):arr.concat(key);
+  save();render();
+}
+function pick(j){
+  const t=TRAITS[j];
+  if(st.traits.includes(t))st.traits=st.traits.filter(x=>x!==t);
+  else if(st.traits.length<5)st.traits.push(t);
+  save();render();
+}
+function setRate(j,v){
+  st.rate[TRIGGERS[j]]=+v;
+  const val=document.querySelectorAll(".row")[j].querySelector(".val");
+  val.textContent=v;
+  val.style.color=v>=8?"var(--pimento)":v>=5?"var(--oil)":"var(--olive)";
+  save();
+}
+function setPct(v){
+  st.pct=+v;
+  $("#pctnum").textContent=v;
+  $("#dirtlbl").textContent=dirtLabel(+v);
+  $("#verdict").textContent=verdictFor(+v);
+  $("#glass").innerHTML=glassSVG(+v);
+  save();
+}
+function go(i){st.i=Math.max(0,Math.min(S.length-1,i));$("#sheet").classList.remove("open");save();render();}
+
+$("#prev").onclick=()=>go(st.i-1);
+$("#next").onclick=()=>go(st.i+1);
+$("#where").onclick=()=>{
+  const sh=$("#sheet");
+  sh.innerHTML=S.map((s,i)=>{
+    const label=s.kind==="cover"?"Start":s.kind==="end"?"The last question":`Round ${s.n} — ${s.title}`;
+    const sub=s.kind==="cover"?"House rules":s.kind==="end"?"Independence, priced":`${(s.qs||[]).length+(s.heavy||[]).length+(s.aside?s.aside.q.length:0)} questions`;
+    return `<button class="jump ${i===st.i?"here":""}" onclick="go(${i})">${label}<span>${sub}</span></button>`;
+  }).join("")+`<div class="sheetfoot">
+    <button class="linkbtn" onclick="document.getElementById('sheet').classList.remove('open')">Close</button>
+    <button class="linkbtn danger" onclick="wipe()">Clear my answers</button></div>`;
+  sh.classList.add("open");
+};
+function wipe(){
+  if(!confirm("Clear your traits, ratings and ticked questions?"))return;
+  st={i:st.i,checked:{},traits:[],rate:{},pct:20};
+  flush();$("#sheet").classList.remove("open");render();
+}
+
+/* swipe between rounds */
+let sx=0,sy=0,swiping=false;
+$("#wrap").addEventListener("touchstart",e=>{
+  if(e.target.closest("input,button"))return swiping=false;
+  sx=e.touches[0].clientX;sy=e.touches[0].clientY;swiping=true;
+},{passive:true});
+$("#wrap").addEventListener("touchend",e=>{
+  if(!swiping)return;swiping=false;
+  const dx=e.changedTouches[0].clientX-sx, dy=e.changedTouches[0].clientY-sy;
+  if(Math.abs(dx)>65&&Math.abs(dy)<55)go(st.i+(dx<0?1:-1));
+},{passive:true});
+document.addEventListener("keydown",e=>{
+  if(e.key==="ArrowRight")go(st.i+1);
+  if(e.key==="ArrowLeft")go(st.i-1);
+});
+
+load();
+</script>
+</body>
+</html>
